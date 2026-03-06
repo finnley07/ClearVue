@@ -8,27 +8,6 @@ ClearVue provides a small set of polished UI components built on a CSS custom pr
 
 ---
 
-## Components
-
-| Component                   | Description                                                                               |
-| --------------------------- | ----------------------------------------------------------------------------------------- |
-| `Button`                    | Versatile button with 5 variants, 3 sizes, loading state, and optional toggle mode        |
-| `Input`                     | Labelled text field with helper/error text and full v-model support                       |
-| `Badge`                     | Compact status indicator with 6 colour variants, 2 sizes, and an optional dot             |
-| `Card`                      | Flexible container with optional header/footer slots, padding control, border, and shadow |
-| `Toast`                     | Popup message with default, info, warning, error, and success variants                    |
-| `Checkbox`                  | Checkbox with indeterminate state, helper/error text, and v-model support                 |
-| `Radio` / `RadioGroup`      | Radio buttons with group wrapper, legend, and error/helper text                           |
-| `Select`                    | Native dropdown with label, placeholder, error text, and disabled option support          |
-| `Switch`                    | Toggle switch in two sizes with helper text and disabled state                            |
-| `Avatar`                    | User avatar showing image, initials, or placeholder; 5 sizes and 3 shape variants         |
-| `Spinner`                   | Animated loading indicator in 5 sizes                                                     |
-| `Modal`                     | Accessible dialog overlay with header, body, footer slots and Escape/backdrop close       |
-| `Tabs` / `Tab` / `TabPanel` | Tab navigation in line and pill variants with keyboard support                            |
-| `DataTable`                 | Bind any data array; define columns, sortable columns, custom cell slots, and loading     |
-
----
-
 ## Getting Started
 
 ### Installation
@@ -116,6 +95,30 @@ createApp(App).use(ClearVue, { theme: brandTheme }).mount("#app");
 
 ---
 
+## Components
+
+Detailed props, slots, events, and examples for each component:
+
+| Component                   | Description                                                                              | Docs                                                  |
+| --------------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `Button`                    | Versatile button with 5 variants, 3 sizes, loading state, and optional toggle mode       | [Button.md](Documentation/components/Button.md)       |
+| `Input`                     | Labelled text field with label, helper/error text, and full v-model support              | [Input.md](Documentation/components/Input.md)         |
+| `Badge`                     | Compact status badge with 6 colour variants, 2 sizes, and an optional dot indicator      | [Badge.md](Documentation/components/Badge.md)         |
+| `Card`                      | Flexible content container with header/footer slots, padding control, border, and shadow | [Card.md](Documentation/components/Card.md)           |
+| `Toast`                     | Popup message with default, info, warning, error, and success variants                   | [Toast.md](Documentation/components/Toast.md)         |
+| `Checkbox`                  | Checkbox with indeterminate state, helper/error text, and v-model support                | [Checkbox.md](Documentation/components/Checkbox.md)   |
+| `Radio` / `RadioGroup`      | Radio buttons with group wrapper, legend, and error/helper text                          | [Radio.md](Documentation/components/Radio.md)         |
+| `Select`                    | Native dropdown with label, placeholder, error/helper text, and disabled options         | [Select.md](Documentation/components/Select.md)       |
+| `Switch`                    | Toggle switch in two sizes with helper text and disabled state                           | [Switch.md](Documentation/components/Switch.md)       |
+| `Avatar`                    | User avatar with image, initials, or placeholder; 5 sizes and 3 shape variants           | [Avatar.md](Documentation/components/Avatar.md)       |
+| `Spinner`                   | Animated loading indicator in 5 sizes                                                    | [Spinner.md](Documentation/components/Spinner.md)     |
+| `Modal`                     | Accessible dialog with header/body/footer slots, Escape and backdrop-close support       | [Modal.md](Documentation/components/Modal.md)         |
+| `Tabs` / `Tab` / `TabPanel` | Tab navigation in line and pill variants                                                 | [Tabs.md](Documentation/components/Tabs.md)           |
+| `DataTable`                 | Bind data arrays; define columns, enable sorting, custom cell slots, and loading state   | [DataTable.md](Documentation/components/DataTable.md) |
+| `Pagination`                | Page navigation with smart ellipsis, prev/next, and v-model binding                      | —                                                     |
+
+---
+
 ## Development
 
 ```bash
@@ -131,30 +134,6 @@ npm run build
 ```
 
 The dev server starts the component playground (`src/playground/ShowcaseApp.vue`) so you can preview all components live.
-
----
-
-## Component Documentation
-
-Detailed props, slots, events, and examples for each component:
-
-| Component                   | Description                                                                              | Docs                                            |
-| --------------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `Button`                    | Versatile button with 5 variants, 3 sizes, loading state, and optional toggle mode       | [Button.md](Documentation/components/Button.md) |
-| `Input`                     | Labelled text field with label, helper/error text, and full v-model support              | [Input.md](Documentation/components/Input.md)   |
-| `Badge`                     | Compact status badge with 6 colour variants, 2 sizes, and an optional dot indicator      | [Badge.md](Documentation/components/Badge.md)   |
-| `Card`                      | Flexible content container with header/footer slots, padding control, border, and shadow | [Card.md](Documentation/components/Card.md)     |
-| `Toast`                     | Popup message with default, info, warning, error, and success variants                   | [Toast.md](Documentation/components/Toast.md)   |
-| `Checkbox`                  | Checkbox with indeterminate state, helper/error text, and v-model support                | —                                               |
-| `Radio` / `RadioGroup`      | Radio buttons with group wrapper, legend, and error/helper text                          | —                                               |
-| `Select`                    | Native dropdown with label, placeholder, error/helper text, and disabled options         | —                                               |
-| `Switch`                    | Toggle switch in two sizes with helper text and disabled state                           | —                                               |
-| `Avatar`                    | User avatar with image, initials, or placeholder; 5 sizes and 3 shape variants           | —                                               |
-| `Spinner`                   | Animated loading indicator in 5 sizes                                                    | —                                               |
-| `Modal`                     | Accessible dialog with header/body/footer slots, Escape and backdrop-close support       | —                                               |
-| `Tabs` / `Tab` / `TabPanel` | Tab navigation in line and pill variants                                                 | —                                               |
-| `DataTable`                 | Bind data arrays; define columns, enable sorting, custom cell slots, and loading state   | —                                               |
-| `Pagination`                | Page navigation with smart ellipsis, prev/next, and v-model binding                      | —                                               |
 
 ---
 
