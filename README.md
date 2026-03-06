@@ -26,7 +26,6 @@ ClearVue provides a small set of polished UI components built on a CSS custom pr
 | `Modal`                     | Accessible dialog overlay with header, body, footer slots and Escape/backdrop close       |
 | `Tabs` / `Tab` / `TabPanel` | Tab navigation in line and pill variants with keyboard support                            |
 | `DataTable`                 | Bind any data array; define columns, sortable columns, custom cell slots, and loading     |
-| `Pagination`                | Page navigation with smart ellipsis, prev/next buttons, and v-model binding               |
 
 ---
 
