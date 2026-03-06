@@ -1,16 +1,36 @@
 {
   "name": "clearvue",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Lightweight, themeable Vue 3 component library",
+  "license": "MIT",
+  "author": "finnley07",
+  "homepage": "https://finnley07.github.io/ClearVue/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/finnley07/ClearVue.git"
+  },
+  "keywords": ["vue", "vue3", "components", "ui", "library"],
   "type": "module",
+  "main": "./dist/clearvue.umd.cjs",
+  "module": "./dist/clearvue.js",
+  "exports": {
+    ".": {
+      "import": "./dist/clearvue.js",
+      "require": "./dist/clearvue.umd.cjs"
+    },
+    "./dist/clearvue.css": "./dist/clearvue.css"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "build:showcase": "vue-tsc -b && vite build --config vite.showcase.config.ts",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "vue": "^3.5.25"
+  "peerDependencies": {
+    "vue": "^3.3.0"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
@@ -18,6 +38,7 @@
     "@vue/tsconfig": "^0.8.1",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
+    "vue": "^3.5.25",
     "vue-tsc": "^3.1.5"
   }
 }
