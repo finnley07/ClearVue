@@ -115,7 +115,6 @@ Detailed props, slots, events, and examples for each component:
 | `Modal`                     | Accessible dialog with header/body/footer slots, Escape and backdrop-close support       | [Modal.md](Documentation/components/Modal.md)         |
 | `Tabs` / `Tab` / `TabPanel` | Tab navigation in line and pill variants                                                 | [Tabs.md](Documentation/components/Tabs.md)           |
 | `DataTable`                 | Bind data arrays; define columns, enable sorting, custom cell slots, and loading state   | [DataTable.md](Documentation/components/DataTable.md) |
-| `Pagination`                | Page navigation with smart ellipsis, prev/next, and v-model binding                      | —                                                     |
 
 ---
 
@@ -134,6 +133,18 @@ npm run build
 ```
 
 The dev server starts the component playground (`src/playground/ShowcaseApp.vue`) so you can preview all components live.
+
+---
+
+## Contributing
+
+- Follow the **GitFlow** workflow (`feature/*`, `develop`, `main`)
+- For every new component:
+  - Add it to `src/playground/ShowcaseApp.vue` (like existing components)
+  - Create a Markdown documentation file in `Documentation/components/`
+- Keep code clean, consistent, and typed (TypeScript)
+
+Pull requests are welcome 🚀
 
 ---
 
