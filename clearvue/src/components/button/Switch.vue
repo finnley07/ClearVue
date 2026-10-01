@@ -29,6 +29,7 @@ defineEmits<{
     <span class="cv-switch__track-wrap">
       <input
         type="checkbox"
+        role="switch"
         class="cv-switch__input"
         :checked="modelValue"
         :disabled="disabled"
@@ -157,6 +158,6 @@ defineEmits<{
 
 .cv-switch__helper {
   font-size: 0.8125rem;
-  color: #6b7280;
+  color: var(--cv-color-text-muted, #6b7280);
 }
 </style>

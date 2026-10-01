@@ -20,6 +20,9 @@ const TOKEN_MAP: Record<keyof ClearVueTheme, string> = {
   colorGhostText: "--cv-color-ghost-text",
   colorGhostBgHover: "--cv-color-ghost-bg-hover",
   colorFocusRing: "--cv-color-focus-ring",
+  colorSurface: "--cv-color-surface",
+  colorSurfaceMuted: "--cv-color-surface-muted",
+  colorTextMuted: "--cv-color-text-muted",
   radiusBtn: "--cv-radius-btn",
   fontWeightBtn: "--cv-font-weight-btn",
 };
@@ -35,6 +38,10 @@ const TOKEN_MAP: Record<keyof ClearVueTheme, string> = {
 export function setTheme(theme: ClearVueTheme): void {
   const root = document.documentElement;
   for (const key of Object.keys(TOKEN_MAP) as (keyof ClearVueTheme)[]) {
-    root.style.setProperty(TOKEN_MAP[key], theme[key]);
+    const value = theme[key];
+    // Optional tokens that a custom theme omits are cleared so a previously
+    // applied theme doesn't leak through and the CSS fallbacks take over.
+    if (value === undefined) root.style.removeProperty(TOKEN_MAP[key]);
+    else root.style.setProperty(TOKEN_MAP[key], value);
   }
 }

@@ -64,6 +64,12 @@ const sortedRows = computed(() => {
   });
 });
 
+function ariaSort(col: DataTableColumn<T>) {
+  if (!col.sortable) return undefined;
+  if (sortKey.value !== col.key) return "none";
+  return sortDir.value === "asc" ? "ascending" : "descending";
+}
+
 function cellValue(row: T, col: DataTableColumn<T>): string | number {
   if (col.format) return col.format(row);
   const val = (row as Record<string, unknown>)[col.key];
@@ -74,8 +80,9 @@ function cellValue(row: T, col: DataTableColumn<T>): string | number {
 <template>
   <div :class="['cv-table-wrap', { 'cv-table-wrap--loading': loading }]">
     <!-- Loading overlay -->
-    <div v-if="loading" class="cv-table__overlay" aria-live="polite">
+    <div v-if="loading" class="cv-table__overlay" role="status">
       <span class="cv-table__spinner" />
+      <span class="cv-sr-only">Loading…</span>
     </div>
 
     <div class="cv-table-scroll">
@@ -92,7 +99,11 @@ function cellValue(row: T, col: DataTableColumn<T>): string | number {
                 { 'cv-table__th--sorted': sortKey === col.key },
               ]"
               :style="col.width ? { width: col.width } : undefined"
+              :aria-sort="ariaSort(col)"
+              :tabindex="col.sortable ? 0 : undefined"
               @click="toggleSort(col)"
+              @keydown.enter.prevent="toggleSort(col)"
+              @keydown.space.prevent="toggleSort(col)"
             >
               <span class="cv-table__th-inner">
                 <slot :name="`header-${col.key}`" :column="col">
@@ -184,6 +195,15 @@ function cellValue(row: T, col: DataTableColumn<T>): string | number {
   overflow-x: auto;
 }
 
+.cv-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 /* ── Table ───────────────────────────────────────────────────── */
 .cv-table {
   width: 100%;
@@ -194,10 +214,10 @@ function cellValue(row: T, col: DataTableColumn<T>): string | number {
 /* ── Header ──────────────────────────────────────────────────── */
 .cv-table__th {
   padding: 0.65rem 1rem;
-  background: #f8fafc;
+  background: var(--cv-color-surface-muted, #f8fafc);
   border-bottom: 1px solid var(--cv-color-secondary, #e5e7eb);
   font-weight: 600;
-  color: #475569;
+  color: var(--cv-color-text-muted, #6b7280);
   text-align: left;
   user-select: none;
 }
@@ -213,8 +233,13 @@ function cellValue(row: T, col: DataTableColumn<T>): string | number {
   cursor: pointer;
 }
 
+.cv-table__th--sortable:focus-visible {
+  outline: 2px solid var(--cv-color-focus-ring, #6366f1);
+  outline-offset: -2px;
+}
+
 .cv-table__th--sortable:hover {
-  background: #f1f5f9;
+  background: var(--cv-color-ghost-bg-hover, #f1f5f9);
   color: var(--cv-color-primary, #6366f1);
 }
 
@@ -254,7 +279,7 @@ function cellValue(row: T, col: DataTableColumn<T>): string | number {
 }
 
 .cv-table__row--striped {
-  background: #f8fafc;
+  background: var(--cv-color-surface-muted, #f8fafc);
 }
 
 .cv-table__row--hoverable:hover {
@@ -270,14 +295,14 @@ function cellValue(row: T, col: DataTableColumn<T>): string | number {
 .cv-table__empty-cell {
   padding: 2.5rem 1rem;
   text-align: center;
-  color: #9ca3af;
+  color: var(--cv-color-text-muted, #6b7280);
 }
 
 /* ── Loading overlay ─────────────────────────────────────────── */
 .cv-table__overlay {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.65);
+  background: color-mix(in srgb, var(--cv-color-surface, #fff) 65%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;

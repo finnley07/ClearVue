@@ -13,7 +13,13 @@ const isActive = computed(() => activeTab?.value === props.id);
 </script>
 
 <template>
-  <div v-show="isActive" role="tabpanel" class="cv-tab-panel">
+  <div
+    v-show="isActive"
+    :id="`cv-tabpanel-${id}`"
+    role="tabpanel"
+    :aria-labelledby="`cv-tab-${id}`"
+    class="cv-tab-panel"
+  >
     <slot />
   </div>
 </template>

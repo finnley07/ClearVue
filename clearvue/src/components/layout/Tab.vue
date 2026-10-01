@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const activeTab = inject<Ref<string | number>>("cv-tabs-active");
 const setActive = inject<(id: string | number) => void>("cv-tabs-set-active");
-const variant = inject<string>("cv-tabs-variant", "line");
+const variant = inject<Ref<string>>("cv-tabs-variant");
 
 const isActive = computed(() => activeTab?.value === props.id);
 </script>
@@ -23,19 +23,20 @@ const isActive = computed(() => activeTab?.value === props.id);
   <button
     role="tab"
     type="button"
+    :id="`cv-tab-${id}`"
     :aria-selected="isActive"
+    :aria-controls="`cv-tabpanel-${id}`"
+    :tabindex="isActive ? 0 : -1"
     :disabled="disabled"
     :class="[
       'cv-tab',
-      `cv-tab--${variant}`,
+      `cv-tab--${variant ?? 'line'}`,
       { 'cv-tab--active': isActive, 'cv-tab--disabled': disabled },
     ]"
     @click="!disabled && setActive?.(id)"
   >
     <slot>{{ label }}</slot>
   </button>
-
-  <!-- Panel is shown inline below the tab strip when active -->
 </template>
 
 <style>
@@ -68,7 +69,7 @@ const isActive = computed(() => activeTab?.value === props.id);
 /* ── Line variant ────────────────────────────────────────────── */
 .cv-tab--line {
   padding: 0.6rem 1rem;
-  color: #6b7280;
+  color: var(--cv-color-text-muted, #6b7280);
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   border-radius: 4px 4px 0 0;
@@ -86,17 +87,17 @@ const isActive = computed(() => activeTab?.value === props.id);
 /* ── Pill variant ────────────────────────────────────────────── */
 .cv-tab--pill {
   padding: 0.4rem 0.9rem;
-  color: #6b7280;
+  color: var(--cv-color-text-muted, #6b7280);
   border-radius: calc(var(--cv-radius-btn, 8px) - 2px);
 }
 
 .cv-tab--pill:hover:not(.cv-tab--disabled) {
   color: var(--cv-color-ghost-text, #374151);
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--cv-color-ghost-bg-hover, rgba(0, 0, 0, 0.04));
 }
 
 .cv-tab--pill.cv-tab--active {
-  background: #fff;
+  background: var(--cv-color-surface, #fff);
   color: var(--cv-color-primary, #6366f1);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }

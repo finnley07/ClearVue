@@ -54,6 +54,8 @@ function handleClick(event: MouseEvent) {
   <button
     :type="type"
     :disabled="disabled || loading"
+    :aria-busy="loading || undefined"
+    :aria-pressed="isToggle ? modelValue : undefined"
     :class="buttonClasses"
     @click="handleClick"
   >

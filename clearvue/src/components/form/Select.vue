@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { computed, useAttrs } from "vue";
+import type { StyleValue } from "vue";
+import { useUid } from "../../composables/useUid";
+
 export interface SelectOption {
   label: string;
   value: string | number;
@@ -16,15 +20,40 @@ interface Props {
   required?: boolean;
 }
 
-withDefaults(defineProps<Props>(), {
+defineOptions({ inheritAttrs: false });
+
+const props = withDefaults(defineProps<Props>(), {
   options: () => [],
   disabled: false,
   required: false,
 });
 
-defineEmits<{
+const emit = defineEmits<{
   "update:modelValue": [value: string | number];
 }>();
+
+const attrs = useAttrs();
+const inputAttrs = computed(() => {
+  const { class: _class, style: _style, ...rest } = attrs;
+  return rest;
+});
+const generatedId = useUid("cv-select");
+const selectId = computed(() => (attrs.id as string | undefined) ?? generatedId);
+const describedBy = computed(() =>
+  props.errorText
+    ? `${selectId.value}-error`
+    : props.helperText
+      ? `${selectId.value}-helper`
+      : undefined,
+);
+
+// The DOM always yields strings – map back to the option's original value so
+// numeric options keep emitting numbers as the prop type promises.
+function onChange(e: Event) {
+  const raw = (e.target as HTMLSelectElement).value;
+  const match = props.options.find((o) => String(o.value) === raw);
+  emit("update:modelValue", match ? match.value : raw);
+}
 </script>
 
 <template>
@@ -35,9 +64,11 @@ defineEmits<{
         'cv-select-wrap--error': !!errorText,
         'cv-select-wrap--disabled': disabled,
       },
+      attrs.class,
     ]"
+    :style="attrs.style as StyleValue"
   >
-    <label v-if="label" class="cv-select__label">
+    <label v-if="label" :for="selectId" class="cv-select__label">
       {{ label
       }}<span v-if="required" class="cv-select__required" aria-hidden="true">
         *</span
@@ -45,13 +76,15 @@ defineEmits<{
     </label>
     <div class="cv-select__container">
       <select
+        v-bind="inputAttrs"
+        :id="selectId"
         class="cv-select"
         :value="modelValue"
         :disabled="disabled"
         :required="required"
-        @change="
-          $emit('update:modelValue', ($event.target as HTMLSelectElement).value)
-        "
+        :aria-invalid="!!errorText || undefined"
+        :aria-describedby="describedBy"
+        @change="onChange"
       >
         <option
           v-if="placeholder"
@@ -83,8 +116,16 @@ defineEmits<{
         </svg>
       </span>
     </div>
-    <p v-if="errorText" class="cv-select__error">{{ errorText }}</p>
-    <p v-else-if="helperText" class="cv-select__helper">{{ helperText }}</p>
+    <p v-if="errorText" :id="`${selectId}-error`" class="cv-select__error">
+      {{ errorText }}
+    </p>
+    <p
+      v-else-if="helperText"
+      :id="`${selectId}-helper`"
+      class="cv-select__helper"
+    >
+      {{ helperText }}
+    </p>
   </div>
 </template>
 
@@ -121,7 +162,7 @@ defineEmits<{
   font-family: inherit;
   font-size: 0.9375rem;
   color: var(--cv-color-ghost-text, #111827);
-  background: #fff;
+  background: var(--cv-color-surface, #fff);
   border: 1.5px solid var(--cv-color-secondary, #d1d5db);
   border-radius: var(--cv-radius-btn, 8px);
   padding: 0.5rem 2.25rem 0.5rem 0.85rem;
@@ -160,7 +201,7 @@ defineEmits<{
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: #9ca3af;
+  color: var(--cv-color-text-muted, #6b7280);
   display: flex;
   align-items: center;
 }
@@ -173,7 +214,7 @@ defineEmits<{
 /* ── Helpers ─────────────────────────────────────────────────── */
 .cv-select__helper {
   font-size: 0.8125rem;
-  color: #6b7280;
+  color: var(--cv-color-text-muted, #6b7280);
 }
 
 .cv-select__error {

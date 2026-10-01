@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { computed, useAttrs } from "vue";
+import type { StyleValue } from "vue";
+import { useUid } from "../../composables/useUid";
+
 export type InputType =
   | "text"
   | "email"
@@ -20,7 +24,9 @@ interface Props {
   required?: boolean;
 }
 
-withDefaults(defineProps<Props>(), {
+defineOptions({ inheritAttrs: false });
+
+const props = withDefaults(defineProps<Props>(), {
   type: "text",
   disabled: false,
   readonly: false,
@@ -30,6 +36,23 @@ withDefaults(defineProps<Props>(), {
 defineEmits<{
   "update:modelValue": [value: string];
 }>();
+
+// Non-prop attributes (name, autocomplete, maxlength …) belong on the native
+// <input>; class and style stay on the wrapper so layout utilities keep working.
+const attrs = useAttrs();
+const inputAttrs = computed(() => {
+  const { class: _class, style: _style, ...rest } = attrs;
+  return rest;
+});
+const generatedId = useUid("cv-input");
+const inputId = computed(() => (attrs.id as string | undefined) ?? generatedId);
+const describedBy = computed(() =>
+  props.errorText
+    ? `${inputId.value}-error`
+    : props.helperText
+      ? `${inputId.value}-helper`
+      : undefined,
+);
 </script>
 
 <template>
@@ -40,28 +63,42 @@ defineEmits<{
         'cv-input-wrap--error': !!errorText,
         'cv-input-wrap--disabled': disabled,
       },
+      attrs.class,
     ]"
+    :style="attrs.style as StyleValue"
   >
-    <label v-if="label" class="cv-input__label">
+    <label v-if="label" :for="inputId" class="cv-input__label">
       {{ label
       }}<span v-if="required" class="cv-input__required" aria-hidden="true">
         *</span
       >
     </label>
     <input
+      v-bind="inputAttrs"
+      :id="inputId"
       :type="type"
       :value="modelValue"
       :placeholder="placeholder"
       :disabled="disabled"
       :readonly="readonly"
       :required="required"
+      :aria-invalid="!!errorText || undefined"
+      :aria-describedby="describedBy"
       class="cv-input"
       @input="
         $emit('update:modelValue', ($event.target as HTMLInputElement).value)
       "
     />
-    <p v-if="errorText" class="cv-input__error">{{ errorText }}</p>
-    <p v-else-if="helperText" class="cv-input__helper">{{ helperText }}</p>
+    <p v-if="errorText" :id="`${inputId}-error`" class="cv-input__error">
+      {{ errorText }}
+    </p>
+    <p
+      v-else-if="helperText"
+      :id="`${inputId}-helper`"
+      class="cv-input__helper"
+    >
+      {{ helperText }}
+    </p>
   </div>
 </template>
 
@@ -89,7 +126,7 @@ defineEmits<{
   font-family: inherit;
   font-size: 0.9375rem;
   color: var(--cv-color-ghost-text, #111827);
-  background: #fff;
+  background: var(--cv-color-surface, #fff);
   border: 1.5px solid var(--cv-color-secondary, #d1d5db);
   border-radius: var(--cv-radius-btn, 8px);
   padding: 0.5rem 0.85rem;
@@ -102,7 +139,7 @@ defineEmits<{
 }
 
 .cv-input::placeholder {
-  color: #9ca3af;
+  color: var(--cv-color-text-muted, #6b7280);
 }
 
 .cv-input:focus {
@@ -123,13 +160,13 @@ defineEmits<{
 .cv-input-wrap--disabled .cv-input {
   opacity: 0.45;
   cursor: not-allowed;
-  background: #f9fafb;
+  background: var(--cv-color-surface-muted, #f8fafc);
 }
 
 /* ── Helper / Error text ────────────────────────────────────── */
 .cv-input__helper {
   font-size: 0.78rem;
-  color: #6b7280;
+  color: var(--cv-color-text-muted, #6b7280);
 }
 
 .cv-input__error {

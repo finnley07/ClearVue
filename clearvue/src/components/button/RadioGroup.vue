@@ -124,7 +124,7 @@ provide("cv-radio-group-set", (val: string | number | boolean) => {
 .cv-radio-group__helper {
   margin-top: 0.35rem;
   font-size: 0.8125rem;
-  color: #6b7280;
+  color: var(--cv-color-text-muted, #6b7280);
 }
 
 .cv-radio-group__error {

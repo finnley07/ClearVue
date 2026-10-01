@@ -22,6 +22,10 @@ export const baseTheme: ClearVueTheme = {
 
   colorFocusRing: "#6366f1",
 
+  colorSurface: "#ffffff",
+  colorSurfaceMuted: "#f8fafc",
+  colorTextMuted: "#6b7280",
+
   radiusBtn: "8px",
   fontWeightBtn: "600",
 };

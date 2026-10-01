@@ -26,7 +26,10 @@ const icons: Record<ToastVariant, string> = {
 </script>
 
 <template>
-  <div role="alert" :class="['cv-toast', `cv-toast--${variant}`]">
+  <div
+    :role="variant === 'error' || variant === 'warning' ? 'alert' : 'status'"
+    :class="['cv-toast', `cv-toast--${variant}`]"
+  >
     <span class="cv-toast__icon" v-html="icons[variant]" />
     <div class="cv-toast__body">
       <p v-if="title" class="cv-toast__title">{{ title }}</p>

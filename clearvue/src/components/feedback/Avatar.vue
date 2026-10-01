@@ -8,7 +8,7 @@ interface Props {
   initials?: string;
   size?: AvatarSize;
   variant?: AvatarVariant;
-  /** Tailwind-compatible colour token used for the initials background */
+  /** Any CSS colour used as the background of the initials / placeholder */
   color?: string;
 }
 
@@ -23,13 +23,15 @@ withDefaults(defineProps<Props>(), {
   <span
     :class="['cv-avatar', `cv-avatar--${size}`, `cv-avatar--${variant}`]"
     :style="!src && color ? { background: color } : undefined"
-    aria-hidden="true"
+    :role="alt ? 'img' : undefined"
+    :aria-label="alt || undefined"
+    :aria-hidden="alt ? undefined : true"
   >
     <img
       v-if="src"
       class="cv-avatar__img"
       :src="src"
-      :alt="alt"
+      alt=""
       draggable="false"
     />
     <span v-else-if="initials" class="cv-avatar__initials">

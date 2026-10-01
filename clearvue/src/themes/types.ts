@@ -30,6 +30,11 @@ export interface ClearVueTheme {
   // ── Focus / accessibility ────────────────────────────────────
   colorFocusRing: string; // --cv-color-focus-ring
 
+  // ── Surfaces & text (optional – fall back to light defaults) ──
+  colorSurface?: string; // --cv-color-surface        (inputs, cards, modals)
+  colorSurfaceMuted?: string; // --cv-color-surface-muted  (headers, footers, stripes)
+  colorTextMuted?: string; // --cv-color-text-muted     (helper text, placeholders)
+
   // ── Shape ────────────────────────────────────────────────────
   radiusBtn: string; // --cv-radius-btn
   fontWeightBtn: string; // --cv-font-weight-btn

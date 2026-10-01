@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { nextTick, onBeforeUnmount, ref, watch } from "vue";
+import { useUid } from "../../composables/useUid";
+
 export type ModalSize = "sm" | "md" | "lg" | "xl" | "full";
 
 interface Props {
@@ -9,6 +12,8 @@ interface Props {
   closeOnBackdrop?: boolean;
   /** Pressing Escape closes the modal */
   closeOnEsc?: boolean;
+  /** Accessible name when no `title` is given (e.g. custom header slot) */
+  ariaLabel?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -29,9 +34,77 @@ function onBackdrop() {
   if (props.closeOnBackdrop) close();
 }
 
+const titleId = useUid("cv-modal-title");
+const dialogEl = ref<HTMLElement | null>(null);
+let previouslyFocused: HTMLElement | null = null;
+let previousOverflow = "";
+let active = false;
+
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+// Listen on the document: the dialog usually has no focus yet when the user
+// presses Escape, so a keydown handler on the dialog element never fires.
 function onKeydown(e: KeyboardEvent) {
-  if (props.closeOnEsc && e.key === "Escape") close();
+  if (e.key === "Escape" && props.closeOnEsc) {
+    e.stopPropagation();
+    close();
+    return;
+  }
+  if (e.key !== "Tab" || !dialogEl.value) return;
+
+  // Keep keyboard focus inside the dialog
+  const items = Array.from(
+    dialogEl.value.querySelectorAll<HTMLElement>(FOCUSABLE),
+  );
+  if (items.length === 0) {
+    e.preventDefault();
+    dialogEl.value.focus();
+    return;
+  }
+  const first = items[0]!;
+  const last = items[items.length - 1]!;
+  const current = document.activeElement;
+  if (e.shiftKey && (current === first || current === dialogEl.value)) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && current === last) {
+    e.preventDefault();
+    first.focus();
+  }
 }
+
+watch(
+  () => props.modelValue,
+  async (open) => {
+    if (open && !active) {
+      active = true;
+      previouslyFocused = document.activeElement as HTMLElement | null;
+      previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      document.addEventListener("keydown", onKeydown);
+      await nextTick();
+      (
+        dialogEl.value?.querySelector<HTMLElement>(FOCUSABLE) ?? dialogEl.value
+      )?.focus();
+    } else if (!open && active) {
+      release();
+    }
+  },
+  { immediate: true },
+);
+
+function release() {
+  active = false;
+  document.removeEventListener("keydown", onKeydown);
+  document.body.style.overflow = previousOverflow;
+  previouslyFocused?.focus?.();
+  previouslyFocused = null;
+}
+
+onBeforeUnmount(() => {
+  if (active) release();
+});
 </script>
 
 <template>
@@ -40,17 +113,21 @@ function onKeydown(e: KeyboardEvent) {
       <div
         v-if="modelValue"
         class="cv-modal-backdrop"
-        role="dialog"
-        aria-modal="true"
-        :aria-label="title"
         @click.self="onBackdrop"
-        @keydown="onKeydown"
       >
-        <div :class="['cv-modal', `cv-modal--${size}`]">
+        <div
+          ref="dialogEl"
+          role="dialog"
+          aria-modal="true"
+          tabindex="-1"
+          :aria-labelledby="title ? titleId : undefined"
+          :aria-label="!title ? ariaLabel : undefined"
+          :class="['cv-modal', `cv-modal--${size}`]"
+        >
           <!-- Header -->
           <div v-if="title || $slots.header" class="cv-modal__header">
             <slot name="header">
-              <span class="cv-modal__title">{{ title }}</span>
+              <span :id="titleId" class="cv-modal__title">{{ title }}</span>
             </slot>
             <button
               type="button"
@@ -97,7 +174,7 @@ function onKeydown(e: KeyboardEvent) {
 
 /* ── Dialog box ──────────────────────────────────────────────── */
 .cv-modal {
-  background: #fff;
+  background: var(--cv-color-surface, #fff);
   border-radius: var(--cv-radius-btn, 10px);
   box-shadow:
     0 4px 24px rgba(0, 0, 0, 0.12),
@@ -110,6 +187,10 @@ function onKeydown(e: KeyboardEvent) {
 }
 
 /* Sizes */
+.cv-modal:focus {
+  outline: none;
+}
+
 .cv-modal--sm {
   max-width: 22rem;
 }
@@ -153,7 +234,7 @@ function onKeydown(e: KeyboardEvent) {
   background: none;
   border: none;
   cursor: pointer;
-  color: #9ca3af;
+  color: var(--cv-color-text-muted, #6b7280);
   border-radius: 6px;
   transition:
     background 0.15s,
@@ -161,8 +242,8 @@ function onKeydown(e: KeyboardEvent) {
 }
 
 .cv-modal__close:hover {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--cv-color-ghost-bg-hover, #f3f4f6);
+  color: var(--cv-color-ghost-text, #374151);
 }
 
 .cv-modal__close svg {
@@ -186,7 +267,7 @@ function onKeydown(e: KeyboardEvent) {
   justify-content: flex-end;
   gap: 0.5rem;
   flex-shrink: 0;
-  background: #f8fafc;
+  background: var(--cv-color-surface-muted, #f8fafc);
 }
 
 /* ── Transition ──────────────────────────────────────────────── */

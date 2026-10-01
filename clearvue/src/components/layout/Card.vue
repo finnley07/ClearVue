@@ -36,7 +36,7 @@ withDefaults(
 <style>
 /* ── Base ───────────────────────────────────────────────────── */
 .cv-card {
-  background: #fff;
+  background: var(--cv-color-surface, #fff);
   border-radius: var(--cv-radius-btn, 10px);
   overflow: hidden;
   display: flex;
@@ -80,6 +80,6 @@ withDefaults(
 .cv-card__footer {
   padding: 0.85rem 1.25rem;
   border-top: 1px solid var(--cv-color-secondary, #e5e7eb);
-  background: #f8fafc;
+  background: var(--cv-color-surface-muted, #f8fafc);
 }
 </style>

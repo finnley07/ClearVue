@@ -88,6 +88,9 @@ Override the default title bar with the `#header` slot.
 | `size`            | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'`  | Width of the dialog                           |
 | `closeOnBackdrop` | `boolean`                                | `true`  | Click outside the panel to close              |
 | `closeOnEsc`      | `boolean`                                | `true`  | Press Escape to close                         |
+| `ariaLabel`       | `string`                                 | —       | Accessible name when no `title` is set        |
+
+While open, the modal locks body scroll, keeps keyboard focus inside the dialog and restores focus to the previously focused element on close.
 
 ---
 

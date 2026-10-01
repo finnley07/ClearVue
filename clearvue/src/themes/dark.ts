@@ -25,6 +25,10 @@ export const darkTheme: ClearVueTheme = {
 
   colorFocusRing: "#818cf8",
 
+  colorSurface: "#111827", // gray-900
+  colorSurfaceMuted: "#1f2937", // gray-800
+  colorTextMuted: "#9ca3af", // gray-400
+
   radiusBtn: "8px",
   fontWeightBtn: "600",
 };

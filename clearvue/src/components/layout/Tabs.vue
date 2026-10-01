@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, provide } from "vue";
+import { ref, provide, computed, watch } from "vue";
 
 interface Props {
   modelValue?: string | number;
@@ -23,12 +23,45 @@ function setActive(id: string | number) {
 
 provide("cv-tabs-active", activeTab);
 provide("cv-tabs-set-active", setActive);
-provide("cv-tabs-variant", props.variant);
+provide(
+  "cv-tabs-variant",
+  computed(() => props.variant),
+);
+
+// Keep the internal state in sync when the parent changes v-model
+watch(
+  () => props.modelValue,
+  (v) => {
+    if (v !== undefined) activeTab.value = v;
+  },
+);
+
+// WAI-ARIA tabs keyboard support: arrows, Home, End
+function onKeydown(e: KeyboardEvent) {
+  const keys = ["ArrowLeft", "ArrowRight", "Home", "End"];
+  if (!keys.includes(e.key)) return;
+  const tabs = Array.from(
+    (e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(
+      '[role="tab"]:not([disabled])',
+    ),
+  );
+  if (!tabs.length) return;
+  const current = tabs.indexOf(document.activeElement as HTMLElement);
+  let next = current;
+  if (e.key === "ArrowRight") next = (current + 1) % tabs.length;
+  else if (e.key === "ArrowLeft")
+    next = (current - 1 + tabs.length) % tabs.length;
+  else if (e.key === "Home") next = 0;
+  else next = tabs.length - 1;
+  e.preventDefault();
+  tabs[next]!.focus();
+  tabs[next]!.click();
+}
 </script>
 
 <template>
   <div :class="['cv-tabs', `cv-tabs--${variant}`]">
-    <div class="cv-tabs__list" role="tablist">
+    <div class="cv-tabs__list" role="tablist" @keydown="onKeydown">
       <slot name="tabs" />
     </div>
     <div class="cv-tabs__panels">

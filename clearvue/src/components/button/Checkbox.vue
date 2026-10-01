@@ -33,6 +33,7 @@ defineEmits<{
         :checked="modelValue"
         :disabled="disabled"
         :indeterminate="indeterminate"
+        :aria-invalid="!!errorText || undefined"
         @change="
           $emit(
             'update:modelValue',
@@ -124,7 +125,7 @@ defineEmits<{
   height: 1.125rem;
   border: 1.5px solid var(--cv-color-secondary, #d1d5db);
   border-radius: 4px;
-  background: #fff;
+  background: var(--cv-color-surface, #fff);
   transition:
     background 0.15s,
     border-color 0.15s,
@@ -171,7 +172,7 @@ defineEmits<{
 
 .cv-checkbox__helper {
   font-size: 0.8125rem;
-  color: #6b7280;
+  color: var(--cv-color-text-muted, #6b7280);
 }
 
 .cv-checkbox__error {

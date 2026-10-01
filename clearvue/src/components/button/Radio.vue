@@ -155,7 +155,7 @@ function handleChange() {
   height: 1.125rem;
   border: 1.5px solid var(--cv-color-secondary, #d1d5db);
   border-radius: 50%;
-  background: #fff;
+  background: var(--cv-color-surface, #fff);
   transition:
     background 0.15s,
     border-color 0.15s,
@@ -199,6 +199,6 @@ function handleChange() {
 
 .cv-radio__helper {
   font-size: 0.8125rem;
-  color: #6b7280;
+  color: var(--cv-color-text-muted, #6b7280);
 }
 </style>

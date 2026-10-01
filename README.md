@@ -82,6 +82,11 @@ const brandTheme: ClearVueTheme = {
 
   colorFocusRing: "#0ea5e9",
 
+  // Optional – inputs, cards, modals, tables. Omit them to keep the light defaults.
+  colorSurface: "#ffffff",
+  colorSurfaceMuted: "#f8fafc",
+  colorTextMuted: "#64748b",
+
   radiusBtn: "6px",
   fontWeightBtn: "500",
 };
